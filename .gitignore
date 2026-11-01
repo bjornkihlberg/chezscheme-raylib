@@ -1,3 +1,7 @@
 deps
 main.ss
 **/*.so
+*.json
+raylib.h.ss
+raymath.h.ss
+rlgl.h.ss
