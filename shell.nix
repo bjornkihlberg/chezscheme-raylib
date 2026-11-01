@@ -9,18 +9,25 @@ let
     };
   pkg-chezscheme-tools = pkgs.callPackage pkg-chezscheme-tools-src {};
 in
+  pkgs.clangStdenv.mkDerivation {
+    name = "dev-shell";
 
-pkgs.mkShell {
-  packages = [
-    pkgs.chez
-    pkg-chezscheme-tools
-  ];
+    src = null;
 
-  buildInputs = [
-    pkgs.raylib
-  ];
+    nativeBuildInputs = [
+      pkgs.chez
+      pkgs.c2ffi
+      pkg-chezscheme-tools
+    ];
 
-  shellHook = ''
-    export LD_LIBRARY_PATH=${pkgs.raylib}/lib:$LD_LIBRARY_PATH
-  '';
-}
+    buildInputs = [
+      pkgs.raylib
+    ];
+
+    shellHook = ''
+      export C_INCLUDE_PATH=${pkgs.clang}/resource-root/include:$C_INCLUDE_PATH
+      export C_INCLUDE_PATH=${pkgs.glibc.dev}/include:$C_INCLUDE_PATH
+      export C_INCLUDE_PATH=${pkgs.raylib}/include:$C_INCLUDE_PATH
+      export LD_LIBRARY_PATH=${pkgs.raylib}/lib:$LD_LIBRARY_PATH
+    '';
+  }
