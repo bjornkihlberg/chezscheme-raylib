@@ -1,7 +1,19 @@
 #!chezscheme
 
 (library (chezscheme-raylib v1 raylib ffi)
-  (export DetachAudioMixedProcessor
+  (export ; Opaque types
+          rAudioProcessor
+          rAudioBuffer
+
+          ; Type aliases
+          Camera
+          RenderTexture2D
+          TextureCubemap
+          Texture2D
+          Quaternion
+
+          ; Procedures
+          DetachAudioMixedProcessor
           AttachAudioMixedProcessor
           DetachAudioStreamProcessor
           AttachAudioStreamProcessor
@@ -601,6 +613,9 @@
 
   (import (chezscheme)
           (chezscheme-ffi v1 ffi))
+
+  (define-ftype rAudioProcessor (struct))
+  (define-ftype rAudioBuffer (struct))
 
   (define-ftype Camera Camera3D)
   (define-ftype RenderTexture2D RenderTexture)
