@@ -6,6 +6,8 @@
       "type": "shell",
       "command": "scheme",
       "args": [
+        "--libdirs",
+        "./src:./deps",
         "--script",
         "./main.ss",
       ],
