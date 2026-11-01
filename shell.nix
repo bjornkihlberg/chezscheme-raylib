@@ -13,9 +13,14 @@ in
 pkgs.mkShell {
   packages = [
     pkgs.chez
+    pkg-chezscheme-tools
   ];
 
   buildInputs = [
-    pkg-chezscheme-tools
+    pkgs.raylib
   ];
+
+  shellHook = ''
+    export LD_LIBRARY_PATH=${pkgs.raylib}/lib:$LD_LIBRARY_PATH
+  '';
 }
