@@ -980,6 +980,8 @@
   (import (chezscheme)
           (chezscheme-ffi v1 ffi))
 
+  (define-ftype char* (* char))
+
   (define-ftype-enum NPatchLayout unsigned-32
     [NPATCH_NINE_PATCH                                  0]
     [NPATCH_THREE_PATCH_VERTICAL                        1]
@@ -1330,196 +1332,6 @@
   (define-ftype rAudioProcessor (struct))
   (define-ftype rAudioBuffer (struct))
 
-  (define-ftype AutomationEventList
-    (struct [capacity unsigned-int]
-            [count unsigned-int]
-            [events (* AutomationEvent)]))
-
-  (define-ftype AutomationEvent
-    (struct [frame unsigned-int]
-            [type unsigned-int]
-            [params (array 4 int)]))
-
-  (define-ftype FilePathList
-    (struct [capacity unsigned-int]
-            [count unsigned-int]
-            [paths (* char*)]))
-
-  (define-ftype VrStereoConfig
-    (struct [projection (array 2 Matrix)]
-            [viewOffset (array 2 Matrix)]
-            [leftLensCenter (array 2 float)]
-            [rightLensCenter (array 2 float)]
-            [leftScreenCenter (array 2 float)]
-            [rightScreenCenter (array 2 float)]
-            [scale (array 2 float)]
-            [scaleIn (array 2 float)]))
-
-  (define-ftype VrDeviceInfo
-    (struct [hResolution int]
-            [vResolution int]
-            [hScreenSize float]
-            [vScreenSize float]
-            [eyeToScreenDistance float]
-            [lensSeparationDistance float]
-            [interpupillaryDistance float]
-            [lensDistortionValues (array 4 float)]
-            [chromaAbCorrection (array 4 float)]))
-
-  (define-ftype Music
-    (struct [stream AudioStream]
-            [frameCount unsigned-int]
-            [looping stdbool]
-            [ctxType int]
-            [ctxData void*]))
-
-  (define-ftype Sound
-    (struct [stream AudioStream]
-            [frameCount unsigned-int]))
-
-  (define-ftype AudioStream
-    (struct [buffer (* rAudioBuffer)]
-            [processor (* rAudioProcessor)]
-            [sampleRate unsigned-int]
-            [sampleSize unsigned-int]
-            [channels unsigned-int]))
-
-  (define-ftype Wave
-    (struct [frameCount unsigned-int]
-            [sampleRate unsigned-int]
-            [sampleSize unsigned-int]
-            [channels unsigned-int]
-            [data void*]))
-
-  (define-ftype BoundingBox
-    (struct [min Vector3]
-            [max Vector3]))
-
-  (define-ftype RayCollision
-    (struct [hit stdbool]
-            [distance float]
-            [point Vector3]
-            [normal Vector3]))
-
-  (define-ftype Ray
-    (struct [position Vector3]
-            [direction Vector3]))
-
-  (define-ftype ModelAnimation
-    (struct [boneCount int]
-            [frameCount int]
-            [bones (* BoneInfo)]
-            [framePoses (* Transform*)]
-            [name (array 32 char)]))
-
-  (define-ftype Model
-    (struct [transform Matrix]
-            [meshCount int]
-            [materialCount int]
-            [meshes (* Mesh)]
-            [materials (* Material)]
-            [meshMaterial (* int)]
-            [boneCount int]
-            [bones (* BoneInfo)]
-            [bindPose (* Transform)]))
-
-  (define-ftype BoneInfo
-    (struct [name (array 32 char)]
-            [parent int]))
-
-  (define-ftype Transform
-    (struct [translation Vector3]
-            [rotation Quaternion]
-            [scale Vector3]))
-
-  (define-ftype Material
-    (struct [shader Shader]
-            [maps (* MaterialMap)]
-            [params (array 4 float)]))
-
-  (define-ftype MaterialMap
-    (struct [texture Texture2D]
-            [color Color]
-            [value float]))
-
-  (define-ftype Shader
-    (struct [id unsigned-int]
-            [locs (* int)]))
-
-  (define-ftype Mesh
-    (struct [vertexCount int]
-            [triangleCount int]
-            [vertices (* float)]
-            [texcoords (* float)]
-            [texcoords2 (* float)]
-            [normals (* float)]
-            [tangents (* float)]
-            [colors void*]
-            [indices (* unsigned-short)]
-            [animVertices (* float)]
-            [animNormals (* float)]
-            [boneIds void*]
-            [boneWeights (* float)]
-            [boneMatrices (* Matrix)]
-            [boneCount int]
-            [vaoId unsigned-int]
-            [vboId (* unsigned-int)]))
-
-  (define-ftype Camera2D
-    (struct [offset Vector2]
-            [target Vector2]
-            [rotation float]
-            [zoom float]))
-
-  (define-ftype Camera3D
-    (struct [position Vector3]
-            [target Vector3]
-            [up Vector3]
-            [fovy float]
-            [projection int]))
-
-  (define-ftype Font
-    (struct [baseSize int]
-            [glyphCount int]
-            [glyphPadding int]
-            [texture Texture2D]
-            [recs (* Rectangle)]
-            [glyphs (* GlyphInfo)]))
-
-  (define-ftype GlyphInfo
-    (struct [value int]
-            [offsetX int]
-            [offsetY int]
-            [advanceX int]
-            [image Image]))
-
-  (define-ftype NPatchInfo
-    (struct [source Rectangle]
-            [left int]
-            [top int]
-            [right int]
-            [bottom int]
-            [layout int]))
-
-  (define-ftype RenderTexture
-    (struct [id unsigned-int]
-            [texture Texture]
-            [depth Texture]))
-
-  (define-ftype Texture
-    (struct [id unsigned-int]
-            [width int]
-            [height int]
-            [mipmaps int]
-            [format int]))
-
-  (define-ftype Image
-    (struct [data void*]
-            [width int]
-            [height int]
-            [mipmaps int]
-            [format int]))
-
   (define-ftype Rectangle
     (struct [x float]
             [y float]
@@ -1556,6 +1368,8 @@
             [z float]
             [w float]))
 
+  (define-ftype Quaternion Vector4)
+
   (define-ftype Vector3
     (struct [x float]
             [y float]
@@ -1565,11 +1379,203 @@
     (struct [x float]
             [y float]))
 
+  (define-ftype AutomationEvent
+    (struct [frame unsigned-int]
+            [type unsigned-int]
+            [params (array 4 int)]))
+
+  (define-ftype AutomationEventList
+    (struct [capacity unsigned-int]
+            [count unsigned-int]
+            [events (* AutomationEvent)]))
+
+  (define-ftype FilePathList
+    (struct [capacity unsigned-int]
+            [count unsigned-int]
+            [paths (* char*)]))
+
+  (define-ftype VrStereoConfig
+    (struct [projection (array 2 Matrix)]
+            [viewOffset (array 2 Matrix)]
+            [leftLensCenter (array 2 float)]
+            [rightLensCenter (array 2 float)]
+            [leftScreenCenter (array 2 float)]
+            [rightScreenCenter (array 2 float)]
+            [scale (array 2 float)]
+            [scaleIn (array 2 float)]))
+
+  (define-ftype VrDeviceInfo
+    (struct [hResolution int]
+            [vResolution int]
+            [hScreenSize float]
+            [vScreenSize float]
+            [eyeToScreenDistance float]
+            [lensSeparationDistance float]
+            [interpupillaryDistance float]
+            [lensDistortionValues (array 4 float)]
+            [chromaAbCorrection (array 4 float)]))
+
+  (define-ftype AudioStream
+    (struct [buffer (* rAudioBuffer)]
+            [processor (* rAudioProcessor)]
+            [sampleRate unsigned-int]
+            [sampleSize unsigned-int]
+            [channels unsigned-int]))
+
+  (define-ftype Music
+    (struct [stream AudioStream]
+            [frameCount unsigned-int]
+            [looping stdbool]
+            [ctxType int]
+            [ctxData void*]))
+
+  (define-ftype Sound
+    (struct [stream AudioStream]
+            [frameCount unsigned-int]))
+
+  (define-ftype Wave
+    (struct [frameCount unsigned-int]
+            [sampleRate unsigned-int]
+            [sampleSize unsigned-int]
+            [channels unsigned-int]
+            [data void*]))
+
+  (define-ftype BoundingBox
+    (struct [min Vector3]
+            [max Vector3]))
+
+  (define-ftype RayCollision
+    (struct [hit stdbool]
+            [distance float]
+            [point Vector3]
+            [normal Vector3]))
+
+  (define-ftype Ray
+    (struct [position Vector3]
+            [direction Vector3]))
+
+  (define-ftype BoneInfo
+    (struct [name (array 32 char)]
+            [parent int]))
+
+  (define-ftype Transform
+    (struct [translation Vector3]
+            [rotation Quaternion]
+            [scale Vector3]))
+
+  (define-ftype Transform* (* Transform))
+
+  (define-ftype ModelAnimation
+    (struct [boneCount int]
+            [frameCount int]
+            [bones (* BoneInfo)]
+            [framePoses (* Transform*)]
+            [name (array 32 char)]))
+
+  (define-ftype Shader
+    (struct [id unsigned-int]
+            [locs (* int)]))
+
+  (define-ftype Texture
+    (struct [id unsigned-int]
+            [width int]
+            [height int]
+            [mipmaps int]
+            [format int]))
+
+  (define-ftype Texture2D Texture)
+
+  (define-ftype MaterialMap
+    (struct [texture Texture2D]
+            [color Color]
+            [value float]))
+
+  (define-ftype Material
+    (struct [shader Shader]
+            [maps (* MaterialMap)]
+            [params (array 4 float)]))
+
+  (define-ftype Mesh
+    (struct [vertexCount int]
+            [triangleCount int]
+            [vertices (* float)]
+            [texcoords (* float)]
+            [texcoords2 (* float)]
+            [normals (* float)]
+            [tangents (* float)]
+            [colors void*]
+            [indices (* unsigned-short)]
+            [animVertices (* float)]
+            [animNormals (* float)]
+            [boneIds void*]
+            [boneWeights (* float)]
+            [boneMatrices (* Matrix)]
+            [boneCount int]
+            [vaoId unsigned-int]
+            [vboId (* unsigned-int)]))
+
+  (define-ftype Model
+    (struct [transform Matrix]
+            [meshCount int]
+            [materialCount int]
+            [meshes (* Mesh)]
+            [materials (* Material)]
+            [meshMaterial (* int)]
+            [boneCount int]
+            [bones (* BoneInfo)]
+            [bindPose (* Transform)]))
+
+  (define-ftype Camera2D
+    (struct [offset Vector2]
+            [target Vector2]
+            [rotation float]
+            [zoom float]))
+
+  (define-ftype Camera3D
+    (struct [position Vector3]
+            [target Vector3]
+            [up Vector3]
+            [fovy float]
+            [projection int]))
+
+  (define-ftype Image
+    (struct [data void*]
+            [width int]
+            [height int]
+            [mipmaps int]
+            [format int]))
+
+  (define-ftype GlyphInfo
+    (struct [value int]
+            [offsetX int]
+            [offsetY int]
+            [advanceX int]
+            [image Image]))
+
+  (define-ftype Font
+    (struct [baseSize int]
+            [glyphCount int]
+            [glyphPadding int]
+            [texture Texture2D]
+            [recs (* Rectangle)]
+            [glyphs (* GlyphInfo)]))
+
+  (define-ftype NPatchInfo
+    (struct [source Rectangle]
+            [left int]
+            [top int]
+            [right int]
+            [bottom int]
+            [layout int]))
+
+  (define-ftype RenderTexture
+    (struct [id unsigned-int]
+            [texture Texture]
+            [depth Texture]))
+
   (define-ftype Camera Camera3D)
   (define-ftype RenderTexture2D RenderTexture)
   (define-ftype TextureCubemap Texture)
-  (define-ftype Texture2D Texture)
-  (define-ftype Quaternion Vector4)
 
   (define-foreign-procedure DetachAudioMixedProcessor (AudioCallback) void)
   (define-foreign-procedure AttachAudioMixedProcessor (AudioCallback) void)
