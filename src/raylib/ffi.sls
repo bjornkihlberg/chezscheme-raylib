@@ -602,6 +602,12 @@
   (import (chezscheme)
           (chezscheme-ffi v1 ffi))
 
+  (define-ftype Camera Camera3D)
+  (define-ftype RenderTexture2D RenderTexture)
+  (define-ftype TextureCubemap Texture)
+  (define-ftype Texture2D Texture)
+  (define-ftype Quaternion Vector4)
+
   (define-foreign-procedure DetachAudioMixedProcessor (AudioCallback) void)
   (define-foreign-procedure AttachAudioMixedProcessor (AudioCallback) void)
   (define-foreign-procedure DetachAudioStreamProcessor (AudioStream AudioCallback) void)
