@@ -2144,7 +2144,7 @@
   (define-foreign-procedure SetWindowMinSize (int int) void)
   (define-foreign-procedure SetWindowMonitor (int) void)
   (define-foreign-procedure SetWindowPosition (int int) void)
-  (define-foreign-procedure SetWindowTitle ((* char)) void)
+  (define-foreign-procedure SetWindowTitle (string) void)
   (define-foreign-procedure SetWindowIcons ((* Image) int) void)
   (define-foreign-procedure SetWindowIcon ((& Image)) void)
   (define-foreign-procedure RestoreWindow () void)
@@ -2164,7 +2164,7 @@
   (define-foreign-procedure IsWindowReady () stdbool)
   (define-foreign-procedure WindowShouldClose () stdbool)
   (define-foreign-procedure CloseWindow () void)
-  (define-foreign-procedure InitWindow (int int (* char)) void)
+  (define-foreign-procedure InitWindow (int int string) void)
 
   (load-shared-object "libraylib.so")
 
