@@ -538,7 +538,6 @@
           GetTextBetween
           TextRemoveSpaces
           TextSubtext
-          TextFormat
           TextLength
           TextIsEqual
           TextCopy
@@ -863,7 +862,6 @@
           MemFree
           MemRealloc
           MemAlloc
-          TraceLog
           SetTraceLogLevel
           OpenURL
           SetConfigFlags
