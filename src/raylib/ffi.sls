@@ -1,6 +1,6 @@
 #!chezscheme
 
-(library (chezscheme-raylib v1 raylib ffi)
+(library (chezscheme-raylib v5 raylib ffi)
   (export ; Enum types
           NPatchLayout
           CameraProjection
