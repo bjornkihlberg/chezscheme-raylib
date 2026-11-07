@@ -336,49 +336,45 @@
           rAudioBuffer
 
           ; Struct types
-          AutomationEventList
-          AutomationEvent
-          FilePathList
-          VrStereoConfig
-          VrDeviceInfo
-          Music
-          Sound
-          AudioStream
-          Wave
-          BoundingBox
-          RayCollision
-          Ray
-          ModelAnimation
-          Model
-          BoneInfo
-          Transform
-          Material
-          MaterialMap
-          Shader
-          Mesh
-          Camera2D
-          Camera3D
-          Font
-          GlyphInfo
-          NPatchInfo
-          RenderTexture
-          Texture
-          Image
-          Rectangle
-          Color
-          Matrix
-          Vector4
-          Vector3
           Vector2
+          Vector3
+          Vector4
+          Matrix
+          Color
+          Rectangle
+          Image
+          Texture
+          RenderTexture
+          NPatchInfo
+          GlyphInfo
+          Font
+          Camera3D
+          Camera2D
+          Mesh
+          Shader
+          MaterialMap
+          Material
+          Transform
+          BoneInfo
+          Model
+          ModelAnimation
+          Ray
+          RayCollision
+          BoundingBox
+          Wave
+          AudioStream
+          Sound
+          Music
+          VrDeviceInfo
+          VrStereoConfig
+          FilePathList
+          AutomationEvent
+          AutomationEventList
 
-          ; Type aliases
-          Camera
-          RenderTexture2D
-          TextureCubemap
-          Texture2D
-          Quaternion
+          ; Callback types
+          AudioCallback
 
-          ; Procedures
+          ; Procedure types
           DetachAudioMixedProcessor
           AttachAudioMixedProcessor
           DetachAudioStreamProcessor
@@ -521,26 +517,7 @@
           DrawCircle3D
           DrawPoint3D
           DrawLine3D
-          TextToFloat
-          TextToInteger
-          TextToCamel
-          TextToSnake
-          TextToPascal
-          TextToLower
-          TextToUpper
-          TextFindIndex
-          TextAppend
-          TextSplit
-          TextJoin
-          TextInsert
-          TextReplaceBetween
-          TextReplace
           GetTextBetween
-          TextRemoveSpaces
-          TextSubtext
-          TextLength
-          TextIsEqual
-          TextCopy
           UnloadTextLines
           LoadTextLines
           CodepointToUTF8
@@ -859,9 +836,6 @@
           SaveFileData
           UnloadFileData
           LoadFileData
-          MemFree
-          MemRealloc
-          MemAlloc
           SetTraceLogLevel
           OpenURL
           SetConfigFlags
@@ -972,8 +946,6 @@
 
   (import (chezscheme)
           (chezscheme-ffi v1 ffi))
-
-  (define-ftype char* (* char))
 
   (define-ftype-enum NPatchLayout unsigned-32
     [NPATCH_NINE_PATCH                                  0]
@@ -1325,255 +1297,246 @@
   (define-ftype rAudioProcessor (struct))
   (define-ftype rAudioBuffer (struct))
 
+  (define-ftype Vector2
+    (struct [x                         float]
+            [y                         float]))
+
+  (define-ftype Vector3
+    (struct [x                         float]
+            [y                         float]
+            [z                         float]))
+
+  (define-ftype Vector4
+    (struct [x                         float]
+            [y                         float]
+            [z                         float]
+            [w                         float]))
+
+  (define-ftype Matrix
+    (struct [m0                        float]
+            [m4                        float]
+            [m8                        float]
+            [m12                       float]
+            [m1                        float]
+            [m5                        float]
+            [m9                        float]
+            [m13                       float]
+            [m2                        float]
+            [m6                        float]
+            [m10                       float]
+            [m14                       float]
+            [m3                        float]
+            [m7                        float]
+            [m11                       float]
+            [m15                       float]))
+
+  (define-ftype Color
+    (struct [r                         unsigned-8]
+            [g                         unsigned-8]
+            [b                         unsigned-8]
+            [a                         unsigned-8]))
+
   (define-ftype Rectangle
-    (struct [x float]
-            [y float]
-            [width float]
-            [height float]))
+    (struct [x                         float]
+            [y                         float]
+            [width                     float]
+            [height                    float]))
 
   (define-ftype Rectangle* (* Rectangle))
 
-  (define-ftype Color
-    (struct [r unsigned-int]
-            [g unsigned-int]
-            [b unsigned-int]
-            [a unsigned-int]))
+  (define-ftype Image
+    (struct [data                      void*]
+            [width                     int]
+            [height                    int]
+            [mipmaps                   int]
+            [format                    int]))
 
-  (define-ftype Matrix
-    (struct [m0 float]
-            [m4 float]
-            [m8 float]
-            [m12 float]
-            [m1 float]
-            [m5 float]
-            [m9 float]
-            [m13 float]
-            [m2 float]
-            [m6 float]
-            [m10 float]
-            [m14 float]
-            [m3 float]
-            [m7 float]
-            [m11 float]
-            [m15 float]))
+  (define-ftype Texture
+    (struct [id                        unsigned-int]
+            [width                     int]
+            [height                    int]
+            [mipmaps                   int]
+            [format                    int]))
 
-  (define-ftype Vector4
-    (struct [x float]
-            [y float]
-            [z float]
-            [w float]))
+  (define-ftype RenderTexture
+    (struct [id                        unsigned-int]
+            [texture                   Texture]
+            [depth                     Texture]))
 
-  (define-ftype Quaternion Vector4)
+  (define-ftype NPatchInfo
+    (struct [source                    Rectangle]
+            [left                      int]
+            [top                       int]
+            [right                     int]
+            [bottom                    int]
+            [layout                    int]))
 
-  (define-ftype Vector3
-    (struct [x float]
-            [y float]
-            [z float]))
+  (define-ftype GlyphInfo
+    (struct [value                     int]
+            [offsetX                   int]
+            [offsetY                   int]
+            [advanceX                  int]
+            [image                     Image]))
 
-  (define-ftype Vector2
-    (struct [x float]
-            [y float]))
+  (define-ftype Font
+    (struct [baseSize                  int]
+            [glyphCount                int]
+            [glyphPadding              int]
+            [texture                   Texture]
+            [recs                      (* Rectangle)]
+            [glyphs                    (* GlyphInfo)]))
 
-  (define-ftype AutomationEvent
-    (struct [frame unsigned-int]
-            [type unsigned-int]
-            [params (array 4 int)]))
+  (define-ftype Camera3D
+    (struct [position                  Vector3]
+            [target                    Vector3]
+            [up                        Vector3]
+            [fovy                      float]
+            [projection                int]))
 
-  (define-ftype AutomationEventList
-    (struct [capacity unsigned-int]
-            [count unsigned-int]
-            [events (* AutomationEvent)]))
+  (define-ftype Camera2D
+    (struct [offset                    Vector2]
+            [target                    Vector2]
+            [rotation                  float]
+            [zoom                      float]))
 
-  (define-ftype FilePathList
-    (struct [capacity unsigned-int]
-            [count unsigned-int]
-            [paths (* char*)]))
+  (define-ftype Mesh
+    (struct [vertexCount               int]
+            [triangleCount             int]
+            [vertices                  (* float)]
+            [texcoords                 (* float)]
+            [texcoords2                (* float)]
+            [normals                   (* float)]
+            [tangents                  (* float)]
+            [colors                    (* unsigned-8)]
+            [indices                   (* unsigned-short)]
+            [animVertices              (* float)]
+            [animNormals               (* float)]
+            [boneIds                   (* unsigned-8)]
+            [boneWeights               (* float)]
+            [boneMatrices              (* Matrix)]
+            [boneCount                 int]
+            [vaoId                     unsigned-int]
+            [vboId                     (* unsigned-int)]))
 
-  (define-ftype VrStereoConfig
-    (struct [projection (array 2 Matrix)]
-            [viewOffset (array 2 Matrix)]
-            [leftLensCenter (array 2 float)]
-            [rightLensCenter (array 2 float)]
-            [leftScreenCenter (array 2 float)]
-            [rightScreenCenter (array 2 float)]
-            [scale (array 2 float)]
-            [scaleIn (array 2 float)]))
+  (define-ftype Shader
+    (struct [id                        unsigned-int]
+            [locs                      (* int)]))
 
-  (define-ftype VrDeviceInfo
-    (struct [hResolution int]
-            [vResolution int]
-            [hScreenSize float]
-            [vScreenSize float]
-            [eyeToScreenDistance float]
-            [lensSeparationDistance float]
-            [interpupillaryDistance float]
-            [lensDistortionValues (array 4 float)]
-            [chromaAbCorrection (array 4 float)]))
+  (define-ftype MaterialMap
+    (struct [texture                   Texture]
+            [color                     Color]
+            [value                     float]))
 
-  (define-ftype AudioStream
-    (struct [buffer (* rAudioBuffer)]
-            [processor (* rAudioProcessor)]
-            [sampleRate unsigned-int]
-            [sampleSize unsigned-int]
-            [channels unsigned-int]))
-
-  (define-ftype Music
-    (struct [stream AudioStream]
-            [frameCount unsigned-int]
-            [looping stdbool]
-            [ctxType int]
-            [ctxData void*]))
-
-  (define-ftype Sound
-    (struct [stream AudioStream]
-            [frameCount unsigned-int]))
-
-  (define-ftype Wave
-    (struct [frameCount unsigned-int]
-            [sampleRate unsigned-int]
-            [sampleSize unsigned-int]
-            [channels unsigned-int]
-            [data void*]))
-
-  (define-ftype BoundingBox
-    (struct [min Vector3]
-            [max Vector3]))
-
-  (define-ftype RayCollision
-    (struct [hit stdbool]
-            [distance float]
-            [point Vector3]
-            [normal Vector3]))
-
-  (define-ftype Ray
-    (struct [position Vector3]
-            [direction Vector3]))
-
-  (define-ftype BoneInfo
-    (struct [name (array 32 char)]
-            [parent int]))
+  (define-ftype Material
+    (struct [shader                    Shader]
+            [maps                      (* MaterialMap)]
+            [params                    (array 4 float)]))
 
   (define-ftype Transform
-    (struct [translation Vector3]
-            [rotation Quaternion]
-            [scale Vector3]))
+    (struct [translation               Vector3]
+            [rotation                  Vector4]
+            [scale                     Vector3]))
 
   (define-ftype Transform* (* Transform))
 
-  (define-ftype ModelAnimation
-    (struct [boneCount int]
-            [frameCount int]
-            [bones (* BoneInfo)]
-            [framePoses (* Transform*)]
-            [name (array 32 char)]))
-
-  (define-ftype Shader
-    (struct [id unsigned-int]
-            [locs (* int)]))
-
-  (define-ftype Texture
-    (struct [id unsigned-int]
-            [width int]
-            [height int]
-            [mipmaps int]
-            [format int]))
-
-  (define-ftype Texture2D Texture)
-
-  (define-ftype MaterialMap
-    (struct [texture Texture2D]
-            [color Color]
-            [value float]))
-
-  (define-ftype Material
-    (struct [shader Shader]
-            [maps (* MaterialMap)]
-            [params (array 4 float)]))
-
-  (define-ftype Mesh
-    (struct [vertexCount int]
-            [triangleCount int]
-            [vertices (* float)]
-            [texcoords (* float)]
-            [texcoords2 (* float)]
-            [normals (* float)]
-            [tangents (* float)]
-            [colors void*]
-            [indices (* unsigned-short)]
-            [animVertices (* float)]
-            [animNormals (* float)]
-            [boneIds void*]
-            [boneWeights (* float)]
-            [boneMatrices (* Matrix)]
-            [boneCount int]
-            [vaoId unsigned-int]
-            [vboId (* unsigned-int)]))
+  (define-ftype BoneInfo
+    (struct [name                      (array 32 char)]
+            [parent                    int]))
 
   (define-ftype Model
-    (struct [transform Matrix]
-            [meshCount int]
-            [materialCount int]
-            [meshes (* Mesh)]
-            [materials (* Material)]
-            [meshMaterial (* int)]
-            [boneCount int]
-            [bones (* BoneInfo)]
-            [bindPose (* Transform)]))
+    (struct [transform                 Matrix]
+            [meshCount                 int]
+            [materialCount             int]
+            [meshes                    (* Mesh)]
+            [materials                 (* Material)]
+            [meshMaterial              (* int)]
+            [boneCount                 int]
+            [bones                     (* BoneInfo)]
+            [bindPose                  (* Transform)]))
 
-  (define-ftype Camera2D
-    (struct [offset Vector2]
-            [target Vector2]
-            [rotation float]
-            [zoom float]))
+  (define-ftype ModelAnimation
+    (struct [boneCount                 int]
+            [frameCount                int]
+            [bones                     (* BoneInfo)]
+            [framePoses                (* Transform*)]
+            [name                      (array 32 char)]))
 
-  (define-ftype Camera3D
-    (struct [position Vector3]
-            [target Vector3]
-            [up Vector3]
-            [fovy float]
-            [projection int]))
+  (define-ftype Ray
+    (struct [position                  Vector3]
+            [direction                 Vector3]))
 
-  (define-ftype Image
-    (struct [data void*]
-            [width int]
-            [height int]
-            [mipmaps int]
-            [format int]))
+  (define-ftype RayCollision
+    (struct [hit                       stdbool]
+            [distance                  float]
+            [point                     Vector3]
+            [normal                    Vector3]))
 
-  (define-ftype GlyphInfo
-    (struct [value int]
-            [offsetX int]
-            [offsetY int]
-            [advanceX int]
-            [image Image]))
+  (define-ftype BoundingBox
+    (struct [min                       Vector3]
+            [max                       Vector3]))
 
-  (define-ftype Font
-    (struct [baseSize int]
-            [glyphCount int]
-            [glyphPadding int]
-            [texture Texture2D]
-            [recs (* Rectangle)]
-            [glyphs (* GlyphInfo)]))
+  (define-ftype Wave
+    (struct [frameCount                unsigned-int]
+            [sampleRate                unsigned-int]
+            [sampleSize                unsigned-int]
+            [channels                  unsigned-int]
+            [data                      void*]))
 
-  (define-ftype NPatchInfo
-    (struct [source Rectangle]
-            [left int]
-            [top int]
-            [right int]
-            [bottom int]
-            [layout int]))
+  (define-ftype AudioStream
+    (struct [buffer                    (* rAudioBuffer)]
+            [processor                 (* rAudioProcessor)]
+            [sampleRate                unsigned-int]
+            [sampleSize                unsigned-int]
+            [channels                  unsigned-int]))
 
-  (define-ftype RenderTexture
-    (struct [id unsigned-int]
-            [texture Texture]
-            [depth Texture]))
+  (define-ftype Sound
+    (struct [stream                    AudioStream]
+            [frameCount                unsigned-int]))
 
-  (define-ftype Camera Camera3D)
-  (define-ftype RenderTexture2D RenderTexture)
-  (define-ftype TextureCubemap Texture)
+  (define-ftype Music
+    (struct [stream                    AudioStream]
+            [frameCount                unsigned-int]
+            [looping                   stdbool]
+            [ctxType                   int]
+            [ctxData                   void*]))
 
-  (define-ftype AudioCallback
-    (function (void* unsigned-int) void))
+  (define-ftype VrDeviceInfo
+    (struct [hResolution               int]
+            [vResolution               int]
+            [hScreenSize               float]
+            [vScreenSize               float]
+            [eyeToScreenDistance       float]
+            [lensSeparationDistance    float]
+            [interpupillaryDistance    float]
+            [lensDistortionValues      (array 4 float)]
+            [chromaAbCorrection        (array 4 float)]))
+
+  (define-ftype VrStereoConfig
+    (struct [projection                (array 2 Matrix)]
+            [viewOffset                (array 2 Matrix)]
+            [leftLensCenter            (array 2 float)]
+            [rightLensCenter           (array 2 float)]
+            [leftScreenCenter          (array 2 float)]
+            [rightScreenCenter         (array 2 float)]
+            [scale                     (array 2 float)]
+            [scaleIn                   (array 2 float)]))
+
+  (define-ftype FilePathList
+    (struct [capacity                  unsigned-int]
+            [count                     unsigned-int]
+            [paths                     (* char*)]))
+
+  (define-ftype AutomationEvent
+    (struct [frame                     unsigned-int]
+            [type                      unsigned-int]
+            [params                    (array 4 int)]))
+
+  (define-ftype AutomationEventList
+    (struct [capacity                  unsigned-int]
+            [count                     unsigned-int]
+            [events                    (* AutomationEvent)]))
+
+  (define-ftype AudioCallback (function (void* unsigned-int) void))
 
   (define-foreign-procedure DetachAudioMixedProcessor ((* AudioCallback)) void)
   (define-foreign-procedure AttachAudioMixedProcessor ((* AudioCallback)) void)
@@ -1608,7 +1571,7 @@
   (define-foreign-procedure PlayMusicStream ((& Music)) void)
   (define-foreign-procedure UnloadMusicStream ((& Music)) void)
   (define-foreign-procedure IsMusicValid ((& Music)) stdbool)
-  (define-foreign-procedure LoadMusicStreamFromMemory ((* char) void* int) (& Music))
+  (define-foreign-procedure LoadMusicStreamFromMemory ((* char) (* unsigned-8) int) (& Music))
   (define-foreign-procedure LoadMusicStream ((* char)) (& Music))
   (define-foreign-procedure UnloadWaveSamples ((* float)) void)
   (define-foreign-procedure LoadWaveSamples ((& Wave)) (* float))
@@ -1634,7 +1597,7 @@
   (define-foreign-procedure LoadSoundFromWave ((& Wave)) (& Sound))
   (define-foreign-procedure LoadSound ((* char)) (& Sound))
   (define-foreign-procedure IsWaveValid ((& Wave)) stdbool)
-  (define-foreign-procedure LoadWaveFromMemory ((* char) void* int) (& Wave))
+  (define-foreign-procedure LoadWaveFromMemory ((* char) (* unsigned-8) int) (& Wave))
   (define-foreign-procedure LoadWave ((* char)) (& Wave))
   (define-foreign-procedure GetMasterVolume () float)
   (define-foreign-procedure SetMasterVolume (float) void)
@@ -1656,7 +1619,7 @@
   (define-foreign-procedure UpdateModelAnimation ((& Model) (& ModelAnimation) int) void)
   (define-foreign-procedure LoadModelAnimations ((* char) (* int)) (* ModelAnimation))
   (define-foreign-procedure SetModelMeshMaterial ((* Model) int int) void)
-  (define-foreign-procedure SetMaterialTexture ((* Material) int (& Texture2D)) void)
+  (define-foreign-procedure SetMaterialTexture ((* Material) int (& Texture)) void)
   (define-foreign-procedure UnloadMaterial ((& Material)) void)
   (define-foreign-procedure IsMaterialValid ((& Material)) stdbool)
   (define-foreign-procedure LoadMaterialDefault () (& Material))
@@ -1681,9 +1644,9 @@
   (define-foreign-procedure UnloadMesh ((& Mesh)) void)
   (define-foreign-procedure UpdateMeshBuffer ((& Mesh) int void* int int) void)
   (define-foreign-procedure UploadMesh ((* Mesh) stdbool) void)
-  (define-foreign-procedure DrawBillboardPro ((& Camera) (& Texture2D) (& Rectangle) (& Vector3) (& Vector3) (& Vector2) (& Vector2) float (& Color)) void)
-  (define-foreign-procedure DrawBillboardRec ((& Camera) (& Texture2D) (& Rectangle) (& Vector3) (& Vector2) (& Color)) void)
-  (define-foreign-procedure DrawBillboard ((& Camera) (& Texture2D) (& Vector3) float (& Color)) void)
+  (define-foreign-procedure DrawBillboardPro ((& Camera3D) (& Texture) (& Rectangle) (& Vector3) (& Vector3) (& Vector2) (& Vector2) float (& Color)) void)
+  (define-foreign-procedure DrawBillboardRec ((& Camera3D) (& Texture) (& Rectangle) (& Vector3) (& Vector2) (& Color)) void)
+  (define-foreign-procedure DrawBillboard ((& Camera3D) (& Texture) (& Vector3) float (& Color)) void)
   (define-foreign-procedure DrawBoundingBox ((& BoundingBox) (& Color)) void)
   (define-foreign-procedure DrawModelPointsEx ((& Model) (& Vector3) (& Vector3) float (& Vector3) (& Color)) void)
   (define-foreign-procedure DrawModelPoints ((& Model) (& Vector3) float (& Color)) void)
@@ -1717,26 +1680,7 @@
   (define-foreign-procedure DrawCircle3D ((& Vector3) float (& Vector3) float (& Color)) void)
   (define-foreign-procedure DrawPoint3D ((& Vector3) (& Color)) void)
   (define-foreign-procedure DrawLine3D ((& Vector3) (& Vector3) (& Color)) void)
-  (define-foreign-procedure TextToFloat ((* char)) float)
-  (define-foreign-procedure TextToInteger ((* char)) int)
-  (define-foreign-procedure TextToCamel ((* char)) (* char))
-  (define-foreign-procedure TextToSnake ((* char)) (* char))
-  (define-foreign-procedure TextToPascal ((* char)) (* char))
-  (define-foreign-procedure TextToLower ((* char)) (* char))
-  (define-foreign-procedure TextToUpper ((* char)) (* char))
-  (define-foreign-procedure TextFindIndex ((* char) (* char)) int)
-  (define-foreign-procedure TextAppend ((* char) (* char) (* int)) void)
-  (define-foreign-procedure TextSplit ((* char) char (* int)) (* char*))
-  (define-foreign-procedure TextJoin ((* char*) int (* char)) (* char))
-  (define-foreign-procedure TextInsert ((* char) (* char) int) (* char))
-  (define-foreign-procedure TextReplaceBetween ((* char) (* char) (* char) (* char)) (* char))
-  (define-foreign-procedure TextReplace ((* char) (* char) (* char)) (* char))
   (define-foreign-procedure GetTextBetween ((* char) (* char) (* char)) (* char))
-  (define-foreign-procedure TextRemoveSpaces ((* char)) (* char))
-  (define-foreign-procedure TextSubtext ((* char) int int) (* char))
-  (define-foreign-procedure TextLength ((* char)) unsigned-int)
-  (define-foreign-procedure TextIsEqual ((* char) (* char)) stdbool)
-  (define-foreign-procedure TextCopy ((* char) (* char)) int)
   (define-foreign-procedure UnloadTextLines ((* char*) int) void)
   (define-foreign-procedure LoadTextLines ((* char) (* int)) (* char*))
   (define-foreign-procedure CodepointToUTF8 (int (* int)) (* char))
@@ -1764,9 +1708,9 @@
   (define-foreign-procedure UnloadFont ((& Font)) void)
   (define-foreign-procedure UnloadFontData ((* GlyphInfo) int) void)
   (define-foreign-procedure GenImageFontAtlas ((* GlyphInfo) (* Rectangle*) int int int int) (& Image))
-  (define-foreign-procedure LoadFontData (void* int int (* int) int int (* int)) (* GlyphInfo))
+  (define-foreign-procedure LoadFontData ((* unsigned-8) int int (* int) int int (* int)) (* GlyphInfo))
   (define-foreign-procedure IsFontValid ((& Font)) stdbool)
-  (define-foreign-procedure LoadFontFromMemory ((* char) void* int int (* int) int) (& Font))
+  (define-foreign-procedure LoadFontFromMemory ((* char) (* unsigned-8) int int (* int) int) (& Font))
   (define-foreign-procedure LoadFontFromImage ((& Image) (& Color) int) (& Font))
   (define-foreign-procedure LoadFontEx ((* char) int (* int) int) (& Font))
   (define-foreign-procedure LoadFont ((* char)) (& Font))
@@ -1788,25 +1732,25 @@
   (define-foreign-procedure ColorToInt ((& Color)) int)
   (define-foreign-procedure Fade ((& Color) float) (& Color))
   (define-foreign-procedure ColorIsEqual ((& Color) (& Color)) stdbool)
-  (define-foreign-procedure DrawTextureNPatch ((& Texture2D) (& NPatchInfo) (& Rectangle) (& Vector2) float (& Color)) void)
-  (define-foreign-procedure DrawTexturePro ((& Texture2D) (& Rectangle) (& Rectangle) (& Vector2) float (& Color)) void)
-  (define-foreign-procedure DrawTextureRec ((& Texture2D) (& Rectangle) (& Vector2) (& Color)) void)
-  (define-foreign-procedure DrawTextureEx ((& Texture2D) (& Vector2) float float (& Color)) void)
-  (define-foreign-procedure DrawTextureV ((& Texture2D) (& Vector2) (& Color)) void)
-  (define-foreign-procedure DrawTexture ((& Texture2D) int int (& Color)) void)
-  (define-foreign-procedure SetTextureWrap ((& Texture2D) int) void)
-  (define-foreign-procedure SetTextureFilter ((& Texture2D) int) void)
-  (define-foreign-procedure GenTextureMipmaps ((* Texture2D)) void)
-  (define-foreign-procedure UpdateTextureRec ((& Texture2D) (& Rectangle) void*) void)
-  (define-foreign-procedure UpdateTexture ((& Texture2D) void*) void)
-  (define-foreign-procedure UnloadRenderTexture ((& RenderTexture2D)) void)
-  (define-foreign-procedure IsRenderTextureValid ((& RenderTexture2D)) stdbool)
-  (define-foreign-procedure UnloadTexture ((& Texture2D)) void)
-  (define-foreign-procedure IsTextureValid ((& Texture2D)) stdbool)
-  (define-foreign-procedure LoadRenderTexture (int int) (& RenderTexture2D))
-  (define-foreign-procedure LoadTextureCubemap ((& Image) int) (& TextureCubemap))
-  (define-foreign-procedure LoadTextureFromImage ((& Image)) (& Texture2D))
-  (define-foreign-procedure LoadTexture ((* char)) (& Texture2D))
+  (define-foreign-procedure DrawTextureNPatch ((& Texture) (& NPatchInfo) (& Rectangle) (& Vector2) float (& Color)) void)
+  (define-foreign-procedure DrawTexturePro ((& Texture) (& Rectangle) (& Rectangle) (& Vector2) float (& Color)) void)
+  (define-foreign-procedure DrawTextureRec ((& Texture) (& Rectangle) (& Vector2) (& Color)) void)
+  (define-foreign-procedure DrawTextureEx ((& Texture) (& Vector2) float float (& Color)) void)
+  (define-foreign-procedure DrawTextureV ((& Texture) (& Vector2) (& Color)) void)
+  (define-foreign-procedure DrawTexture ((& Texture) int int (& Color)) void)
+  (define-foreign-procedure SetTextureWrap ((& Texture) int) void)
+  (define-foreign-procedure SetTextureFilter ((& Texture) int) void)
+  (define-foreign-procedure GenTextureMipmaps ((* Texture)) void)
+  (define-foreign-procedure UpdateTextureRec ((& Texture) (& Rectangle) void*) void)
+  (define-foreign-procedure UpdateTexture ((& Texture) void*) void)
+  (define-foreign-procedure UnloadRenderTexture ((& RenderTexture)) void)
+  (define-foreign-procedure IsRenderTextureValid ((& RenderTexture)) stdbool)
+  (define-foreign-procedure UnloadTexture ((& Texture)) void)
+  (define-foreign-procedure IsTextureValid ((& Texture)) stdbool)
+  (define-foreign-procedure LoadRenderTexture (int int) (& RenderTexture))
+  (define-foreign-procedure LoadTextureCubemap ((& Image) int) (& Texture))
+  (define-foreign-procedure LoadTextureFromImage ((& Image)) (& Texture))
+  (define-foreign-procedure LoadTexture ((* char)) (& Texture))
   (define-foreign-procedure ImageDrawTextEx ((* Image) (& Font) (* char) (& Vector2) float float (& Color)) void)
   (define-foreign-procedure ImageDrawText ((* Image) (* char) int int int (& Color)) void)
   (define-foreign-procedure ImageDraw ((* Image) (& Image) (& Rectangle) (& Rectangle) (& Color)) void)
@@ -1875,14 +1819,14 @@
   (define-foreign-procedure GenImageGradientLinear (int int int (& Color) (& Color)) (& Image))
   (define-foreign-procedure GenImageColor (int int (& Color)) (& Image))
   (define-foreign-procedure ExportImageAsCode ((& Image) (* char)) stdbool)
-  (define-foreign-procedure ExportImageToMemory ((& Image) (* char) (* int)) void*)
+  (define-foreign-procedure ExportImageToMemory ((& Image) (* char) (* int)) (* unsigned-8))
   (define-foreign-procedure ExportImage ((& Image) (* char)) stdbool)
   (define-foreign-procedure UnloadImage ((& Image)) void)
   (define-foreign-procedure IsImageValid ((& Image)) stdbool)
   (define-foreign-procedure LoadImageFromScreen () (& Image))
-  (define-foreign-procedure LoadImageFromTexture ((& Texture2D)) (& Image))
-  (define-foreign-procedure LoadImageFromMemory ((* char) void* int) (& Image))
-  (define-foreign-procedure LoadImageAnimFromMemory ((* char) void* int (* int)) (& Image))
+  (define-foreign-procedure LoadImageFromTexture ((& Texture)) (& Image))
+  (define-foreign-procedure LoadImageFromMemory ((* char) (* unsigned-8) int) (& Image))
+  (define-foreign-procedure LoadImageAnimFromMemory ((* char) (* unsigned-8) int (* int)) (& Image))
   (define-foreign-procedure LoadImageAnim ((* char) (* int)) (& Image))
   (define-foreign-procedure LoadImageRaw ((* char) int int int int) (& Image))
   (define-foreign-procedure LoadImage ((* char)) (& Image))
@@ -1953,10 +1897,10 @@
   (define-foreign-procedure DrawPixelV ((& Vector2) (& Color)) void)
   (define-foreign-procedure DrawPixel (int int (& Color)) void)
   (define-foreign-procedure GetShapesTextureRectangle () (& Rectangle))
-  (define-foreign-procedure GetShapesTexture () (& Texture2D))
-  (define-foreign-procedure SetShapesTexture ((& Texture2D) (& Rectangle)) void)
-  (define-foreign-procedure UpdateCameraPro ((* Camera) (& Vector3) (& Vector3) float) void)
-  (define-foreign-procedure UpdateCamera ((* Camera) int) void)
+  (define-foreign-procedure GetShapesTexture () (& Texture))
+  (define-foreign-procedure SetShapesTexture ((& Texture) (& Rectangle)) void)
+  (define-foreign-procedure UpdateCameraPro ((* Camera3D) (& Vector3) (& Vector3) float) void)
+  (define-foreign-procedure UpdateCamera ((* Camera3D) int) void)
   (define-foreign-procedure GetGesturePinchAngle () float)
   (define-foreign-procedure GetGesturePinchVector () (& Vector2))
   (define-foreign-procedure GetGestureDragAngle () float)
@@ -2012,14 +1956,14 @@
   (define-foreign-procedure ExportAutomationEventList ((& AutomationEventList) (* char)) stdbool)
   (define-foreign-procedure UnloadAutomationEventList ((& AutomationEventList)) void)
   (define-foreign-procedure LoadAutomationEventList ((* char)) (& AutomationEventList))
-  (define-foreign-procedure ComputeSHA256 (void* int) (* unsigned-int))
-  (define-foreign-procedure ComputeSHA1 (void* int) (* unsigned-int))
-  (define-foreign-procedure ComputeMD5 (void* int) (* unsigned-int))
-  (define-foreign-procedure ComputeCRC32 (void* int) unsigned-int)
-  (define-foreign-procedure DecodeDataBase64 ((* char) (* int)) void*)
-  (define-foreign-procedure EncodeDataBase64 (void* int (* int)) (* char))
-  (define-foreign-procedure DecompressData (void* int (* int)) void*)
-  (define-foreign-procedure CompressData (void* int (* int)) void*)
+  (define-foreign-procedure ComputeSHA256 ((* unsigned-8) int) (* unsigned-int))
+  (define-foreign-procedure ComputeSHA1 ((* unsigned-8) int) (* unsigned-int))
+  (define-foreign-procedure ComputeMD5 ((* unsigned-8) int) (* unsigned-int))
+  (define-foreign-procedure ComputeCRC32 ((* unsigned-8) int) unsigned-int)
+  (define-foreign-procedure DecodeDataBase64 ((* char) (* int)) (* unsigned-8))
+  (define-foreign-procedure EncodeDataBase64 ((* unsigned-8) int (* int)) (* char))
+  (define-foreign-procedure DecompressData ((* unsigned-8) int (* int)) (* unsigned-8))
+  (define-foreign-procedure CompressData ((* unsigned-8) int (* int)) (* unsigned-8))
   (define-foreign-procedure UnloadDroppedFiles ((& FilePathList)) void)
   (define-foreign-procedure LoadDroppedFiles () (& FilePathList))
   (define-foreign-procedure IsFileDropped () stdbool)
@@ -2051,13 +1995,10 @@
   (define-foreign-procedure SaveFileText ((* char) (* char)) stdbool)
   (define-foreign-procedure UnloadFileText ((* char)) void)
   (define-foreign-procedure LoadFileText ((* char)) (* char))
-  (define-foreign-procedure ExportDataAsCode (void* int (* char)) stdbool)
+  (define-foreign-procedure ExportDataAsCode ((* unsigned-8) int (* char)) stdbool)
   (define-foreign-procedure SaveFileData ((* char) void* int) stdbool)
-  (define-foreign-procedure UnloadFileData (void*) void)
-  (define-foreign-procedure LoadFileData ((* char) (* int)) void*)
-  (define-foreign-procedure MemFree (void*) void)
-  (define-foreign-procedure MemRealloc (void* unsigned-int) void*)
-  (define-foreign-procedure MemAlloc (unsigned-int) void*)
+  (define-foreign-procedure UnloadFileData ((* unsigned-8)) void)
+  (define-foreign-procedure LoadFileData ((* char) (* int)) (* unsigned-8))
   (define-foreign-procedure SetTraceLogLevel (int) void)
   (define-foreign-procedure OpenURL ((* char)) void)
   (define-foreign-procedure SetConfigFlags (unsigned-int) void)
@@ -2074,15 +2015,15 @@
   (define-foreign-procedure GetFrameTime () float)
   (define-foreign-procedure SetTargetFPS (int) void)
   (define-foreign-procedure GetCameraMatrix2D ((& Camera2D)) (& Matrix))
-  (define-foreign-procedure GetCameraMatrix ((& Camera)) (& Matrix))
+  (define-foreign-procedure GetCameraMatrix ((& Camera3D)) (& Matrix))
   (define-foreign-procedure GetScreenToWorld2D ((& Vector2) (& Camera2D)) (& Vector2))
   (define-foreign-procedure GetWorldToScreen2D ((& Vector2) (& Camera2D)) (& Vector2))
-  (define-foreign-procedure GetWorldToScreenEx ((& Vector3) (& Camera) int int) (& Vector2))
-  (define-foreign-procedure GetWorldToScreen ((& Vector3) (& Camera)) (& Vector2))
-  (define-foreign-procedure GetScreenToWorldRayEx ((& Vector2) (& Camera) int int) (& Ray))
-  (define-foreign-procedure GetScreenToWorldRay ((& Vector2) (& Camera)) (& Ray))
+  (define-foreign-procedure GetWorldToScreenEx ((& Vector3) (& Camera3D) int int) (& Vector2))
+  (define-foreign-procedure GetWorldToScreen ((& Vector3) (& Camera3D)) (& Vector2))
+  (define-foreign-procedure GetScreenToWorldRayEx ((& Vector2) (& Camera3D) int int) (& Ray))
+  (define-foreign-procedure GetScreenToWorldRay ((& Vector2) (& Camera3D)) (& Ray))
   (define-foreign-procedure UnloadShader ((& Shader)) void)
-  (define-foreign-procedure SetShaderValueTexture ((& Shader) int (& Texture2D)) void)
+  (define-foreign-procedure SetShaderValueTexture ((& Shader) int (& Texture)) void)
   (define-foreign-procedure SetShaderValueMatrix ((& Shader) int (& Matrix)) void)
   (define-foreign-procedure SetShaderValueV ((& Shader) int void* int int) void)
   (define-foreign-procedure SetShaderValue ((& Shader) int void* int) void)
@@ -2102,7 +2043,7 @@
   (define-foreign-procedure EndShaderMode () void)
   (define-foreign-procedure BeginShaderMode ((& Shader)) void)
   (define-foreign-procedure EndTextureMode () void)
-  (define-foreign-procedure BeginTextureMode ((& RenderTexture2D)) void)
+  (define-foreign-procedure BeginTextureMode ((& RenderTexture)) void)
   (define-foreign-procedure EndMode3D () void)
   (define-foreign-procedure BeginMode3D ((& Camera3D)) void)
   (define-foreign-procedure EndMode2D () void)
@@ -2144,7 +2085,7 @@
   (define-foreign-procedure SetWindowMinSize (int int) void)
   (define-foreign-procedure SetWindowMonitor (int) void)
   (define-foreign-procedure SetWindowPosition (int int) void)
-  (define-foreign-procedure SetWindowTitle (string) void)
+  (define-foreign-procedure SetWindowTitle ((* char)) void)
   (define-foreign-procedure SetWindowIcons ((* Image) int) void)
   (define-foreign-procedure SetWindowIcon ((& Image)) void)
   (define-foreign-procedure RestoreWindow () void)
@@ -2164,9 +2105,7 @@
   (define-foreign-procedure IsWindowReady () stdbool)
   (define-foreign-procedure WindowShouldClose () stdbool)
   (define-foreign-procedure CloseWindow () void)
-  (define-foreign-procedure InitWindow (int int string) void)
-
-  (load-shared-object "libraylib.so")
+  (define-foreign-procedure InitWindow (int int (* char)) void)
 
   (meta-cond
     [(= (optimize-level) 0)
@@ -2312,27 +2251,7 @@
       (assert (foreign-entry? "DrawCircle3D"))
       (assert (foreign-entry? "DrawPoint3D"))
       (assert (foreign-entry? "DrawLine3D"))
-      (assert (foreign-entry? "TextToFloat"))
-      (assert (foreign-entry? "TextToInteger"))
-      (assert (foreign-entry? "TextToCamel"))
-      (assert (foreign-entry? "TextToSnake"))
-      (assert (foreign-entry? "TextToPascal"))
-      (assert (foreign-entry? "TextToLower"))
-      (assert (foreign-entry? "TextToUpper"))
-      (assert (foreign-entry? "TextFindIndex"))
-      (assert (foreign-entry? "TextAppend"))
-      (assert (foreign-entry? "TextSplit"))
-      (assert (foreign-entry? "TextJoin"))
-      (assert (foreign-entry? "TextInsert"))
-      (assert (foreign-entry? "TextReplaceBetween"))
-      (assert (foreign-entry? "TextReplace"))
       (assert (foreign-entry? "GetTextBetween"))
-      (assert (foreign-entry? "TextRemoveSpaces"))
-      (assert (foreign-entry? "TextSubtext"))
-      (assert (foreign-entry? "TextFormat"))
-      (assert (foreign-entry? "TextLength"))
-      (assert (foreign-entry? "TextIsEqual"))
-      (assert (foreign-entry? "TextCopy"))
       (assert (foreign-entry? "UnloadTextLines"))
       (assert (foreign-entry? "LoadTextLines"))
       (assert (foreign-entry? "CodepointToUTF8"))
@@ -2644,10 +2563,6 @@
       (assert (foreign-entry? "FileCopy"))
       (assert (foreign-entry? "FileRemove"))
       (assert (foreign-entry? "FileRename"))
-      (assert (foreign-entry? "SetSaveFileTextCallback"))
-      (assert (foreign-entry? "SetLoadFileTextCallback"))
-      (assert (foreign-entry? "SetSaveFileDataCallback"))
-      (assert (foreign-entry? "SetLoadFileDataCallback"))
       (assert (foreign-entry? "SaveFileText"))
       (assert (foreign-entry? "UnloadFileText"))
       (assert (foreign-entry? "LoadFileText"))
@@ -2655,11 +2570,6 @@
       (assert (foreign-entry? "SaveFileData"))
       (assert (foreign-entry? "UnloadFileData"))
       (assert (foreign-entry? "LoadFileData"))
-      (assert (foreign-entry? "MemFree"))
-      (assert (foreign-entry? "MemRealloc"))
-      (assert (foreign-entry? "MemAlloc"))
-      (assert (foreign-entry? "SetTraceLogCallback"))
-      (assert (foreign-entry? "TraceLog"))
       (assert (foreign-entry? "SetTraceLogLevel"))
       (assert (foreign-entry? "OpenURL"))
       (assert (foreign-entry? "SetConfigFlags"))
