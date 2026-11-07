@@ -110,6 +110,10 @@
                 [AudioCallback '(* AudioCallback)]
                 [else `(unknown-symbol ,t)])]
             [(equal? t '(:pointer :void)) 'void*]
+            [(equal? t '(:pointer :char))
+              (if (eq? proc-pos 'arg)
+                  'string
+                  '(* char))]
             [(equal? t '(:pointer (:pointer :char))) '(* char*)]
             [(equal? t '(:pointer (:pointer Transform))) '(* Transform*)]
             [(equal? t '(:pointer (:pointer Rectangle))) '(* Rectangle*)]
