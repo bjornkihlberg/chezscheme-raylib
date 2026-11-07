@@ -19,5 +19,20 @@
       },
       "problemMatcher": [],
     },
+    {
+      "label": "generate ffi",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "generate",
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "clear": true,
+        "focus": false,
+      },
+      "problemMatcher": [],
+    },
   ],
 }
