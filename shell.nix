@@ -17,6 +17,7 @@ in
     nativeBuildInputs = [
       pkgs.chez
       pkgs.c2ffi
+      pkgs.gnumake
       pkg-chezscheme-tools
     ];
 
@@ -25,6 +26,7 @@ in
     ];
 
     shellHook = ''
+      export RAYLIB_HEADER="${pkgs.raylib}/include/raylib.h"
       export C_INCLUDE_PATH=${pkgs.clang}/resource-root/include:$C_INCLUDE_PATH
       export C_INCLUDE_PATH=${pkgs.glibc.dev}/include:$C_INCLUDE_PATH
       export C_INCLUDE_PATH=${pkgs.raylib}/include:$C_INCLUDE_PATH
