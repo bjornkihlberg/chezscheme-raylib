@@ -4,3 +4,5 @@ project.ss     export-ignore
 .gitattributes export-ignore
 .gitignore     export-ignore
 .vscode        export-ignore
+generation.ss  export-ignore
+makefile       export-ignore
